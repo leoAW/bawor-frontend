@@ -20,6 +20,9 @@
     const _user = JSON.parse(localStorage.getItem('bawor_user') || '{"name":"Pengguna"}'); 
     // if (!_user) { window.location.replace('login.html'); } 
     function logout() { localStorage.removeItem('bawor_user'); window.location.href = 'login.html'; }
+
+    const BACKEND_BASE_URL = 'https://leoananta-bawor-backend.hf.space';
+    const CHAT_API_PATH = BACKEND_BASE_URL + '/chat';
   </script>
 
   <script>
@@ -789,6 +792,9 @@
     if (mp && !mp.contains(e.target)) mp.classList.remove('open');
   });
 
+  // ── Backend configuration ──────────────────────
+  const BACKEND_URL = 'https://leoananta-bawor-backend.hf.space';
+
   // ── State ──────────────────────────────────────
   let messages = [];
   let isTyping = false;
@@ -898,7 +904,7 @@
     
     try {
       // Panggil backend API
-      const response = await fetch('/chat', {
+      const response = await fetch(CHAT_API_PATH, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text, session_id: sessionStorage.getItem('sessionId') })
