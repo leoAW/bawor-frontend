@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&family=Fraunces:ital,wght@0,300;0,600;0,700;1,300;1,600&display=swap" rel="stylesheet"/>
-  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   <script>
     (function(){
       var t = localStorage.getItem('bawor_theme');
@@ -453,38 +453,66 @@
     }
     .stat-table td.highlight { color: #1AAFA8; font-weight: 600; }
 
-    /* ── Gemini chart table (bawor-table) ── */
-    .bawor-chart-wrap {
-      margin-top: 10px;
-      border-top: 1px solid rgba(26,175,168,0.15);
-      padding-top: 10px;
-      animation: msgIn 0.4s ease both 0.1s;
+    /* ── Data section labels ("Grafik" / "Tabel Data") ── */
+    .data-section-label {
+      font-size: 0.7rem; font-weight: 700;
+      color: rgba(245,240,232,0.35);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin: 14px 0 8px;
+      display: flex; align-items: center; gap: 8px;
     }
+    .data-section-label::after {
+      content: ''; flex: 1;
+      height: 1px; background: rgba(255,255,255,0.06);
+    }
+
+    /* ── Chart.js container ── */
+    .bawor-chart-container {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(26,175,168,0.14);
+      border-radius: 12px;
+      padding: 16px;
+      height: 240px;
+      position: relative;
+      animation: msgIn 0.35s ease both 0.05s;
+    }
+
+    /* ── Table container ── */
+    .bawor-table-container {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(26,175,168,0.12);
+      border-radius: 12px;
+      overflow: hidden;
+      animation: msgIn 0.35s ease both 0.1s;
+    }
+    .bawor-table-badge {
+      font-size: 0.7rem; font-weight: 500;
+      color: #1AAFA8;
+      background: rgba(26,175,168,0.08);
+      border-bottom: 1px solid rgba(26,175,168,0.1);
+      padding: 8px 14px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .bawor-table-badge svg { flex-shrink: 0; opacity: 0.6; }
     .bawor-table {
       width: 100%; border-collapse: collapse;
-      font-size: 0.8rem; margin-top: 4px;
-      border-radius: 8px; overflow: hidden;
+      font-size: 0.8rem;
     }
     .bawor-table th {
-      background: rgba(26,175,168,0.15);
-      color: #1AAFA8; font-weight: 600;
-      text-align: center; padding: 7px 12px;
-      border: 1px solid rgba(26,175,168,0.15);
-      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em;
+      background: rgba(26,175,168,0.1);
+      color: rgba(245,240,232,0.55); font-weight: 600;
+      text-align: left; padding: 8px 14px;
+      border-bottom: 1px solid rgba(26,175,168,0.1);
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
     }
     .bawor-table td {
-      padding: 6px 12px;
-      color: rgba(245,240,232,0.85);
-      border: 1px solid rgba(255,255,255,0.05);
-      text-align: center;
+      padding: 8px 14px;
+      color: rgba(245,240,232,0.82);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: top;
     }
-    .bawor-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.025); }
-    .bawor-table tbody tr:hover { background: rgba(26,175,168,0.07); transition: background 0.15s; }
-    .bawor-chart-desc {
-      font-size: 0.78rem; color: rgba(245,240,232,0.55);
-      margin-top: 6px; line-height: 1.5;
-    }
-    .bawor-chart-desc strong { color: #1AAFA8; }
+    .bawor-table tbody tr:last-child td { border-bottom: none; }
+    .bawor-table tbody tr:hover { background: rgba(26,175,168,0.05); transition: background 0.15s; }
 
     .fade-up { animation: fadeUp 0.6s ease both; }
     @keyframes fadeUp {
@@ -563,19 +591,25 @@
     html.light-mode .stat-table td { color: #374151; border-bottom-color: #f3f4f6; }
     html.light-mode .stat-table td.highlight { color: #0284c7; }
 
-    /* Light mode: bawor-table */
-    html.light-mode .bawor-chart-wrap { border-top-color: #e5e7eb; }
+    /* Light mode: data sections */
+    html.light-mode .data-section-label { color: rgba(31,41,55,0.4); }
+    html.light-mode .data-section-label::after { background: rgba(0,0,0,0.08); }
+    html.light-mode .bawor-chart-container {
+      background: #f9fafb; border-color: #d1d5db;
+    }
+    html.light-mode .bawor-table-container {
+      background: #f9fafb; border-color: #e5e7eb;
+    }
+    html.light-mode .bawor-table-badge {
+      background: #eff6ff; border-bottom-color: #dbeafe; color: #0369a1;
+    }
     html.light-mode .bawor-table th {
-      background: #eff6ff; color: #0369a1;
-      border-color: #bfdbfe;
+      background: #f3f4f6; color: #6b7280; border-bottom-color: #e5e7eb;
     }
     html.light-mode .bawor-table td {
-      color: #1f2937; border-color: #e5e7eb;
+      color: #1f2937; border-bottom-color: #f3f4f6;
     }
-    html.light-mode .bawor-table tbody tr:nth-child(even) { background: #f9fafb; }
     html.light-mode .bawor-table tbody tr:hover { background: #f0f9ff; }
-    html.light-mode .bawor-chart-desc { color: #6b7280; }
-    html.light-mode .bawor-chart-desc strong { color: #0369a1; }
 
     /* Input Area */
     html.light-mode .input-bar-wrap {
@@ -893,7 +927,7 @@
     closeSidebar();
   }
 
-  // ── Render ─────────────────────────────────────
+  // ── Render ──────────────────────────────────────────────
   function renderMessages() {
     const area = document.getElementById('messagesArea');
     const welcome = document.getElementById('welcomeScreen');
@@ -903,51 +937,122 @@
     area.style.display = 'flex'; welcome.style.display = 'none';
     area.innerHTML = '';
     messages.forEach(msg => area.appendChild(createBubble(msg)));
+
+    // Render Chart.js setelah semua elemen masuk ke DOM
+    area.querySelectorAll('canvas[data-chart-cfg]').forEach(canvas => {
+      const cfg = JSON.parse(canvas.getAttribute('data-chart-cfg'));
+      canvas.removeAttribute('data-chart-cfg');
+      renderChartOnCanvas(canvas, cfg);
+    });
+
     scrollBottom();
   }
 
   function createBubble(msg) {
     const row = document.createElement('div');
     row.className = `msg-row ${msg.role}`;
+
     if (msg.role === 'bot') {
-      const sourceText = msg.sources && msg.sources.length > 0 
-        ? msg.sources.join(', ') 
+      const sourceText = msg.sources && msg.sources.length > 0
+        ? msg.sources.join(', ')
         : 'BPS Kabupaten Banyumas';
 
-      // Buat bubble dulu pakai textContent agar aman (tidak ada XSS dari Qwen)
+      // ─ Avatar
+      const avatar = document.createElement('div');
+      avatar.className = 'bot-avatar';
+      avatar.innerHTML = `<img src="assets/images/Bawor-Logo.png" alt="BAWOR" onerror="this.src='https://picsum.photos/seed/bawor/100/100'" />`;
+
+      // ─ Wrapper (takes remaining width)
+      const wrapper = document.createElement('div');
+      wrapper.style.cssText = 'flex:1;min-width:0;';
+
+      // ─ Text bubble (Qwen — rendered as plain text, XSS-safe)
       const bubble = document.createElement('div');
       bubble.className = 'bubble bot';
+      const textSpan = document.createElement('span');
+      textSpan.textContent = msg.text;
+      bubble.appendChild(textSpan);
+      wrapper.appendChild(bubble);
 
-      const textNode = document.createElement('span');
-      textNode.textContent = msg.text;  // Qwen plain text — aman
-      bubble.appendChild(textNode);
+      // ─ Chart + Table sections (from Gemini chart_data)
+      if (msg.chart_data) {
+        const cd = msg.chart_data;
 
-      // Inject chart_html dari Gemini langsung sebagai innerHTML di container terpisah
-      if (msg.chart_html) {
-        const chartWrap = document.createElement('div');
-        chartWrap.className = 'bawor-chart-wrap';
-        chartWrap.innerHTML = msg.chart_html;  // Gemini HTML tabel — sudah divalidasi backend
-        bubble.appendChild(chartWrap);
-      } else if (msg.table) {
-        // Fallback: tabel lama dari buildTable (jika ada)
-        bubble.insertAdjacentHTML('beforeend', buildTable(msg.table));
+        // Grafik
+        if (cd.chart && Array.isArray(cd.chart.labels) && Array.isArray(cd.chart.values)
+            && cd.chart.labels.length >= 2) {
+          const label = document.createElement('div');
+          label.className = 'data-section-label';
+          label.textContent = 'Grafik';
+          wrapper.appendChild(label);
+
+          const chartBox = document.createElement('div');
+          chartBox.className = 'bawor-chart-container';
+
+          const canvas = document.createElement('canvas');
+          // Store config as data attr, rendered after DOM insertion
+          canvas.setAttribute('data-chart-cfg', JSON.stringify(cd.chart));
+          chartBox.appendChild(canvas);
+          wrapper.appendChild(chartBox);
+        }
+
+        // Tabel Data
+        if (cd.table && Array.isArray(cd.table.headers) && Array.isArray(cd.table.rows)
+            && cd.table.rows.length > 0) {
+          const label2 = document.createElement('div');
+          label2.className = 'data-section-label';
+          label2.textContent = 'Tabel Data';
+          wrapper.appendChild(label2);
+
+          const tblBox = document.createElement('div');
+          tblBox.className = 'bawor-table-container';
+
+          // Source badge inside table container
+          if (msg.sources && msg.sources.length > 0) {
+            const badge = document.createElement('div');
+            badge.className = 'bawor-table-badge';
+            badge.innerHTML = `<svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>${escapeHtml(msg.sources[0])}`;
+            tblBox.appendChild(badge);
+          }
+
+          const tbl = document.createElement('table');
+          tbl.className = 'bawor-table';
+
+          // thead
+          const thead = document.createElement('thead');
+          const hRow = document.createElement('tr');
+          cd.table.headers.forEach(h => {
+            const th = document.createElement('th');
+            th.textContent = h;
+            hRow.appendChild(th);
+          });
+          thead.appendChild(hRow);
+          tbl.appendChild(thead);
+
+          // tbody
+          const tbody = document.createElement('tbody');
+          cd.table.rows.forEach(row => {
+            const tr = document.createElement('tr');
+            (Array.isArray(row) ? row : [row]).forEach(cell => {
+              const td = document.createElement('td');
+              td.textContent = cell;
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+          tbl.appendChild(tbody);
+          tblBox.appendChild(tbl);
+          wrapper.appendChild(tblBox);
+        }
       }
 
-      const sourceTag = document.createElement('div');
-      sourceTag.className = 'source-tag';
-      sourceTag.innerHTML = `
-        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-        Sumber: ${escapeHtml(sourceText)}`;
+      // ─ Source tag
+      const srcTag = document.createElement('div');
+      srcTag.className = 'source-tag';
+      srcTag.innerHTML = `<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>Sumber: ${escapeHtml(sourceText)}`;
+      wrapper.appendChild(srcTag);
 
-      const wrapper = document.createElement('div');
-      wrapper.appendChild(bubble);
-      wrapper.appendChild(sourceTag);
-
-      const avatarHtml = document.createElement('div');
-      avatarHtml.className = 'bot-avatar';
-      avatarHtml.innerHTML = `<img src="assets/images/Bawor-Logo.png" alt="BAWOR" onerror="this.src='https://picsum.photos/seed/bawor/100/100'" />`;
-
-      row.appendChild(avatarHtml);
+      row.appendChild(avatar);
       row.appendChild(wrapper);
     } else {
       row.innerHTML = `<div class="bubble user">${msg.text}</div>`;
@@ -995,7 +1100,7 @@
         role:       'bot',
         text:       data.answer,
         sources:    data.sources,
-        chart_html: data.chart_html || null,   // HTML tabel dari Gemini (nullable)
+        chart_data: data.chart_data || null,   // JSON dari Gemini: {chart, table}
       });
       renderMessages(); isTyping = false;
     } catch (e) {
